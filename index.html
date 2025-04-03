@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>网站导航</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" crossorigin="anonymous">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <!-- 留空，原指南针图标已移除 -->
+            </div>
+            <button id="default-category-btn" class="default-category-btn" title="设置默认分类">
+                <i class="ri-settings-3-line"></i>
+            </button>
+            <!-- 添加壁纸上传按钮 -->
+            <button id="wallpaper-btn" class="wallpaper-btn" title="设置背景壁纸">
+                <i class="ri-image-line"></i>
+            </button>
+            <!-- 天气显示区域已移除 -->
+        </div>
+        <div class="search-box">
+            <div class="search-engine-icon" id="search-engine-icon">
+                <i class="ri-baidu-line search-icon" title="点击切换搜索引擎"></i>
+            </div>
+            <input type="text" id="search-input" placeholder="搜索一下，你就知道">
+            <button id="search-button"><i class="ri-arrow-right-line"></i></button>
+            <!-- 搜索引擎下拉菜单 -->
+            <div id="search-engine-dropdown" class="search-engine-dropdown">
+                <div class="search-engine-item" data-engine="baidu">
+                    <i class="ri-baidu-line"></i>
+                    <span>百度搜索</span>
+                </div>
+                <div class="search-engine-item" data-engine="sogou">
+                    <i class="ri-global-line"></i>
+                    <span>搜狗搜索</span>
+                </div>
+                <div class="search-engine-item" data-engine="bing">
+                    <i class="ri-microsoft-line"></i>
+                    <span>必应搜索</span>
+                </div>
+                <div class="search-engine-item" data-engine="google">
+                    <i class="ri-google-line"></i>
+                    <span>谷歌搜索</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="add-website-btn" class="add-website-btn" title="添加网站">
+                <i class="ri-add-line"></i>
+            </button>
+            <button id="theme-toggle" class="theme-toggle" title="切换主题">
+                <i class="ri-sun-line light-icon"></i>
+                <i class="ri-moon-line dark-icon"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- 每日一言 -->
+    <div class="daily-quote">
+        <div class="quote-content" id="quote-content">
+            <i class="ri-double-quotes-l quote-icon"></i>
+            <p id="quote-text">加载中...</p>
+            <p id="quote-author"></p>
+        </div>
+        <button id="refresh-quote" title="换一条"><i class="ri-refresh-line"></i></button>
+    </div>
+    
+    <!-- 分类导航 -->
+    <div class="category-nav" id="category-nav">
+        <!-- 分类导航将通过JavaScript动态生成 -->
+    </div>
+    
+    <!-- 网站网格 -->
+    <div class="website-grid" id="website-grid">
+        <!-- 网站列表将通过JavaScript动态生成 -->
+    </div>
+    
+    <!-- 添加网站的弹窗 -->
+    <div id="add-website-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加网站</h3>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-website-form">
+                    <div class="form-group">
+                        <label for="website-name">网站名称</label>
+                        <input type="text" id="website-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="website-url">网站地址</label>
+                        <input type="url" id="website-url" placeholder="https://" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="website-description">网站描述</label>
+                        <input type="text" id="website-description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="website-category">分类</label>
+                        <select id="website-category" required>
+                            <!-- 分类将通过JavaScript动态生成 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="submit-btn">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 设置默认分类的弹窗 -->
+    <div id="default-category-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>设置默认分类</h3>
+                <button class="close-btn" id="close-category-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">选择进入页面时默认显示的分类</p>
+                <div class="form-group">
+                    <label for="default-category">默认分类</label>
+                    <select id="default-category-select">
+                        <!-- 分类将通过JavaScript动态生成 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="save-default-category" class="submit-btn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 壁纸设置弹窗 -->
+    <div id="wallpaper-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>设置背景壁纸</h3>
+                <button class="close-btn" id="close-wallpaper-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">自定义页面背景壁纸</p>
+                
+                <div class="wallpaper-preview-container">
+                    <div id="wallpaper-preview" class="wallpaper-preview">
+                        <i class="ri-image-line"></i>
+                        <span>预览区域</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wallpaper-file">选择图片</label>
+                    <input type="file" id="wallpaper-file" accept="image/*" class="wallpaper-file-input">
+                    <div class="file-input-wrapper">
+                        <button class="file-input-btn">选择图片文件</button>
+                        <span id="file-name" class="file-name">未选择文件</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="wallpaper-opacity">背景透明度</label>
+                    <div class="opacity-slider-container">
+                        <input type="range" id="wallpaper-opacity" min="0" max="100" value="30" class="opacity-slider">
+                        <span id="opacity-value">30%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group wallpaper-options">
+                    <button id="apply-wallpaper" class="submit-btn">应用壁纸</button>
+                    <button id="remove-wallpaper" class="remove-btn">移除壁纸</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 右键菜单 -->
+    <div id="context-menu" class="context-menu" style="display: none;">
+        <div class="context-menu-item edit" id="edit-website">
+            <i class="ri-edit-line"></i>
+            <span>编辑网站</span>
+        </div>
+        <div class="context-menu-item delete" id="delete-website">
+            <i class="ri-delete-bin-line"></i>
+            <span>删除网站</span>
+        </div>
+    </div>
+    
+    <!-- 编辑自定义分类模态窗口 -->
+    <div id="edit-category-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑自定义分类</h3>
+                <button id="close-edit-category-modal" class="close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="category-options">
+                    <div class="category-name-edit">
+                        <label for="custom-category-name">分类名称</label>
+                        <input type="text" id="custom-category-name" placeholder="输入自定义分类名称">
+                    </div>
+                    
+                    <div class="category-tools">
+                        <div class="sort-option">
+                            <button id="sort-sites-btn" class="sort-sites-btn"><i class="ri-sort-asc"></i> <span>最近添加优先</span></button>
+                        </div>
+                        <div class="data-operation">
+                            <button id="export-data-btn" class="export-data-btn" title="导出自定义分类数据"><i class="ri-download-2-line"></i> 导出数据</button>
+                            <button id="import-data-btn" class="import-data-btn" title="导入自定义分类数据"><i class="ri-upload-2-line"></i> 导入数据</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="drag-instructions">
+                    <i class="ri-drag-move-line"></i> 拖动网站卡片可以调整顺序
+                </div>
+                
+                <div class="custom-sites-container">
+                    <p id="custom-sites-count">共 <span>0</span> 个网站</p>
+                    <div id="custom-sites-list" class="custom-sites-list">
+                        <!-- 网站列表将在JS中动态生成 -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-custom-category" class="primary-btn">保存更改</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 隐藏的文件输入框用于导入功能 -->
+    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+    
+    <script src="script.js"></script>
+</body>
+</html> 
